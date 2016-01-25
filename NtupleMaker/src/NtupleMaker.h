@@ -111,10 +111,10 @@ public:
 
 
     // muon isolation
-    double isolationR03_sumpt;
+    double isolationR03_sumPt;
     double isolationR03_hadEt;
     double isolationR03_emEt;
-    double isolationR05_sumpt;
+    double isolationR05_sumPt;
     double isolationR05_hadEt;
     double isolationR05_emEt;
     double PfChargedHadronIsoR05;
