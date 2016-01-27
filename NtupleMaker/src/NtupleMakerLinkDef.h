@@ -14,6 +14,7 @@
 #pragma link C++ class NtupleJet+;
 #pragma link C++ class NtupleMET+;
 #pragma link C++ class NtupleGenParticle+;
+#pragma link C++ class NtupleTrack+;
 #pragma link C++ class NtupleEvent+;
 #pragma link C++ class std::vector<NtupleTrigger>+;
 #pragma link C++ class std::vector<NtupleTriggerObject>+;
@@ -26,4 +27,5 @@
 #pragma link C++ class std::vector<NtupleJet>+;
 #pragma link C++ class std::vector<NtupleMET>+;
 #pragma link C++ class std::vector<NtupleGenParticle>+;
+#pragma link C++ class std::vector<NtupleTrack>+;
 #endif

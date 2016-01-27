@@ -321,6 +321,32 @@ public:
 
 };
 
+class NtupleTrack {
+
+public:
+    double px;
+    double py;
+    double pz;
+    double pt;
+    double eta;
+    double phi;
+    double charge;
+    double dxy;
+    double d0;
+    double dsz;
+    double dz;
+    double dxyBS;
+    double dszBS;
+    double dzBS;
+    double dxyVTX;
+    double dszVTX;
+    double dzVTX;
+
+    NtupleTrack(){};
+    virtual ~NtupleTrack(){};
+
+};
+
 
 class NtupleEvent {
 
@@ -336,6 +362,7 @@ public:
     double rho;        
     double weight;
     int nGenParticles;
+    int nTracks;
 
     std::vector<NtupleTrigger> triggers;
     std::vector<NtupleTriggerObject> triggerobjects;
@@ -348,6 +375,7 @@ public:
     std::vector<NtupleJet> jets;
     std::vector<NtupleMET> MET;
     std::vector<NtupleGenParticle> genparticles;
+    std::vector<NtupleTrack> tracks;
 
     NtupleEvent(){};
     virtual ~NtupleEvent(){};

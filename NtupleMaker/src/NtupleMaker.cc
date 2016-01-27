@@ -136,6 +136,7 @@ private:
     virtual void fillJets(const edm::Event& iEvent);
     virtual void fillMETs(const edm::Event& iEvent);
     virtual void fillGenParticles(const edm::Event& iEvent);
+    virtual void fillTracks(const edm::Event& iEvent);
 
 
     // ----------member data ---------------------------
@@ -161,6 +162,7 @@ private:
     edm::EDGetTokenT<std::vector<pat::MET>> metToken;
     edm::EDGetTokenT<std::vector<reco::GenParticle>> genparticlesToken;
     edm::EDGetTokenT<GenEventInfoProduct> generatorToken;
+    edm::EDGetTokenT<edm::View<pat::PackedCandidate>> trackToken;
 
 
     ESHandle<MagneticField> B;
@@ -208,7 +210,8 @@ NtupleMaker::NtupleMaker(const edm::ParameterSet& iConfig):
     jetToken                       (consumes<std::vector<pat::Jet>>                     (iConfig.getParameter<edm::InputTag>("Jets"))),
     metToken                       (consumes<std::vector<pat::MET>>                     (iConfig.getParameter<edm::InputTag>("MET"))),
     genparticlesToken              (consumes<std::vector<reco::GenParticle>>            (iConfig.getParameter<edm::InputTag>("GenParticles"))),
-    generatorToken                 (consumes<GenEventInfoProduct>                       (iConfig.getParameter<edm::InputTag>("Generator")))
+    generatorToken                 (consumes<GenEventInfoProduct>                       (iConfig.getParameter<edm::InputTag>("Generator"))),
+    trackToken                     (consumes<edm::View<pat::PackedCandidate>>           (iConfig.getParameter<edm::InputTag>("lostTracks")))
 {}
 
 
@@ -979,6 +982,72 @@ void NtupleMaker::fillGenParticles(const edm::Event& iEvent) {
     event_.nGenParticles = _GennParticles;
 
 }//
+
+void NtupleMaker::fillTracks(const edm::Event& iEvent) {
+
+    NtupleTrack track_;
+
+    Handle<View<pat::PackedCandidate> > tracks;
+    iEvent.getByToken( trackToken, tracks );
+
+    edm::Handle<std::vector<pat::Muon>> muons;
+    iEvent.getByToken(muonsToken,muons);
+
+    edm::Handle<std::vector<pat::Electron>> electrons;
+    iEvent.getByToken(electronsToken, electrons);
+
+    event_.nTracks = tracks->size();
+    if(tracks->size()==0) return;
+
+    bool matching = false;
+    double dR = 999;
+
+    int _nTracks = 0;
+    for( unsigned i = 0; i < tracks->size(); i++ ) {
+
+        edm::Ptr<pat::PackedCandidate> track = tracks->ptrAt(i);
+
+        std::vector<pat::Muon>::const_iterator mu = muons.begin();
+        std::vector<pat::Electron>::const_iterator el = electrons.begin();
+        matching = false;
+
+        while( mu != muons.end() && !matching  ) {
+            dR = deltaR(mu->eta(),mu->phi(),track->eta(),track->phi());
+            if(dR<0.5) matching = true;
+            ++mu;
+        }
+        if(!matching) {
+            while( el != electrons.end() && !matching  ) {
+                dR = deltaR(el->eta(),el->phi(),track->eta(),track->phi());
+                if(dR<0.5) matching = true;
+                ++el;
+            }
+        }
+
+        if(!matching) continue;
+        _nTracks++;
+
+        track_.px     = track->px();
+        track_.py     = track->py();
+        track_.pz     = track->pz();
+        track_.pt     = track->pt();
+        track_.eta    = track->eta();
+        track_.phi    = track->phi();
+        track_.charge = track->charge();
+        track_.dxy    = track->dxy();
+        track_.d0     = track->d0();
+        track_.dsz    = track->dsz();
+        track_.dz     = track->dz();
+        track_.dxyBS  = track->dxy(beamSpot.position());
+        track_.dszBS  = track->dsz(beamSpot.position());
+        track_.dzBS   = track->dz(beamSpot.position());
+        track_.dxyVTX = track->dxy(vtx.position());
+        track_.dszVTX = track->dsz(vtx.position());
+        track_.dzVTX  = track->dz(vtx.position());
+    }
+    event_.nTracks = _nTracks;
+    event_.tracks.push_back(track_);
+}
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(NtupleMaker);
