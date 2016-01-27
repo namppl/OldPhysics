@@ -533,10 +533,10 @@ void NtupleMaker::fillMuons(const edm::Event& iEvent) {
         }   
 
         // Isolation
-        mu_.isolationR03_sumpt    = mu->isolationR03().sumPt;
+        mu_.isolationR03_sumPt    = mu->isolationR03().sumPt;
         mu_.isolationR03_hadEt    = mu->isolationR03().hadEt;
         mu_.isolationR03_emEt     = mu->isolationR03().emEt;
-        mu_.isolationR05_sumpt    = mu->isolationR05().sumPt;
+        mu_.isolationR05_sumPt    = mu->isolationR05().sumPt;
         mu_.isolationR05_hadEt    = mu->isolationR05().hadEt;
         mu_.isolationR05_emEt     = mu->isolationR05().emEt; 
         mu_.PfChargedHadronIsoR04 = mu->pfIsolationR04().sumChargedHadronPt;
