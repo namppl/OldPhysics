@@ -16,7 +16,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 ## Source
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-      'file:SingleMuon_MINIAOD.root'
+      'file:/afs/cern.ch/work/k/knam/public/ntuple/CMSSW_7_6_3/src/Physics/NtupleMaker/test/SingleMuon_MINIAOD.root'
       #'file:EG_MINIAOD.root'
       #'file:00F4C642-D360-E511-9145-02163E0146E8.root'
       #'root://eoscms//eos/cms/store/data/Run2015D/SingleMuon/MINIAOD/PromptReco-v3/000/256/676/00000/FCCE68ED-EC5F-E511-8F08-02163E01465A.root'
@@ -89,7 +89,8 @@ process.tree = cms.EDAnalyzer("NtupleMaker",
   phoNeutralHadronIsolation = cms.InputTag("photonIDValueMapProducer:phoNeutralHadronIsolation"),
   phoPhotonIsolation = cms.InputTag("photonIDValueMapProducer:phoPhotonIsolation"),
   Jets = cms.InputTag("slimmedJets"),
-  MET = cms.InputTag("slimmedMETs")
+  MET = cms.InputTag("slimmedMETs"),
+  Tracks = cms.InputTag("lostTracks")
 )
 
 process.p = cms.Path(

@@ -211,7 +211,7 @@ NtupleMaker::NtupleMaker(const edm::ParameterSet& iConfig):
     metToken                       (consumes<std::vector<pat::MET>>                     (iConfig.getParameter<edm::InputTag>("MET"))),
     genparticlesToken              (consumes<std::vector<reco::GenParticle>>            (iConfig.getParameter<edm::InputTag>("GenParticles"))),
     generatorToken                 (consumes<GenEventInfoProduct>                       (iConfig.getParameter<edm::InputTag>("Generator"))),
-    trackToken                     (consumes<edm::View<pat::PackedCandidate>>           (iConfig.getParameter<edm::InputTag>("lostTracks")))
+    trackToken                     (consumes<edm::View<pat::PackedCandidate>>           (iConfig.getParameter<edm::InputTag>("Tracks")))
 {}
 
 
