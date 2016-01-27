@@ -240,6 +240,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     event_.jets.clear();
     event_.MET.clear();
     event_.genparticles.clear();
+    event_.tracks.clear();
 
     iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTBuilder);
     iSetup.get<IdealMagneticFieldRecord>().get(B);
@@ -1007,17 +1008,17 @@ void NtupleMaker::fillTracks(const edm::Event& iEvent) {
 
         edm::Ptr<pat::PackedCandidate> track = tracks->ptrAt(i);
 
-        std::vector<pat::Muon>::const_iterator mu = muons.begin();
-        std::vector<pat::Electron>::const_iterator el = electrons.begin();
+        std::vector<pat::Muon>::const_iterator mu = muons->begin();
+        std::vector<pat::Electron>::const_iterator el = electrons->begin();
         matching = false;
 
-        while( mu != muons.end() && !matching  ) {
+        while( mu != muons->end() && !matching  ) {
             dR = deltaR(mu->eta(),mu->phi(),track->eta(),track->phi());
             if(dR<0.5) matching = true;
             ++mu;
         }
         if(!matching) {
-            while( el != electrons.end() && !matching  ) {
+            while( el != electrons->end() && !matching  ) {
                 dR = deltaR(el->eta(),el->phi(),track->eta(),track->phi());
                 if(dR<0.5) matching = true;
                 ++el;
@@ -1035,14 +1036,10 @@ void NtupleMaker::fillTracks(const edm::Event& iEvent) {
         track_.phi    = track->phi();
         track_.charge = track->charge();
         track_.dxy    = track->dxy();
-        track_.d0     = track->d0();
-        track_.dsz    = track->dsz();
         track_.dz     = track->dz();
         track_.dxyBS  = track->dxy(beamSpot.position());
-        track_.dszBS  = track->dsz(beamSpot.position());
         track_.dzBS   = track->dz(beamSpot.position());
         track_.dxyVTX = track->dxy(vtx.position());
-        track_.dszVTX = track->dsz(vtx.position());
         track_.dzVTX  = track->dz(vtx.position());
     }
     event_.nTracks = _nTracks;

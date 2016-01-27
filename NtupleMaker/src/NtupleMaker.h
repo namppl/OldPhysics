@@ -332,14 +332,10 @@ public:
     double phi;
     double charge;
     double dxy;
-    double d0;
-    double dsz;
     double dz;
     double dxyBS;
-    double dszBS;
     double dzBS;
     double dxyVTX;
-    double dszVTX;
     double dzVTX;
 
     NtupleTrack(){};
