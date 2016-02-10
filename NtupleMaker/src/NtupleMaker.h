@@ -326,7 +326,7 @@ class NtupleEvent {
 
 public:
     int run;
-    int event;
+    unsigned long long event;
     int lumi;
     int nVertices;
     int nMuons;
