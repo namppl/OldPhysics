@@ -352,6 +352,8 @@ public:
     unsigned long long event;
     int lumi;
     int nVertices;
+    int nPU;    
+    int nPUin;    
     int nMuons;
     int nElectrons;    
     int nPhotons;

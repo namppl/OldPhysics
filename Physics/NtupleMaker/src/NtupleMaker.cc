@@ -168,6 +168,7 @@
         edm::EDGetTokenT<trigger::TriggerEvent> triggersummaryToken;
         edm::EDGetTokenT<reco::BeamSpot> beamspotToken;
         edm::EDGetTokenT<reco::VertexCollection> vertexToken;
+        edm::EDGetTokenT<std::vector< PileupSummaryInfo > > puToken;
         edm::EDGetTokenT<std::vector<pat::PackedCandidate>> pfCandidatesToken;  
         edm::EDGetTokenT<std::vector<pat::Muon>> muonsToken;  
         edm::EDGetTokenT<edm::View<pat::Electron>> electronsToken;
@@ -232,6 +233,7 @@
     triggersummaryToken            (consumes<trigger::TriggerEvent>                     (iConfig.getParameter<edm::InputTag>("TriggerSummary"))),
     beamspotToken                  (consumes<reco::BeamSpot>                            (iConfig.getParameter<edm::InputTag>("BeamSpot"))),
     vertexToken                    (consumes<std::vector<reco::Vertex>>                 (iConfig.getParameter<edm::InputTag>("Vertex"))),
+    puToken                        (consumes<std::vector<PileupSummaryInfo>>            (iConfig.getParameter<edm::InputTag>("PU"))),
     pfCandidatesToken              (consumes<std::vector<pat::PackedCandidate>>         (iConfig.getParameter<edm::InputTag>("PFCandidates"))),
     muonsToken                     (consumes<std::vector<pat::Muon>>                    (iConfig.getParameter<edm::InputTag>("Muons"))),
     electronsToken                 (consumes<edm::View<pat::Electron>>                  (iConfig.getParameter<edm::InputTag>("Electrons"))),
@@ -300,6 +302,27 @@
         event_.event     = iEvent.id().event();
         event_.lumi      = iEvent.id().luminosityBlock();
         event_.nVertices = pvHandle->size();
+
+		if( isMC ) {
+			edm::Handle<std::vector< PileupSummaryInfo > >  PupInfo;
+			iEvent.getByToken(puToken, PupInfo);
+			std::vector<PileupSummaryInfo>::const_iterator PVI;
+
+			int npv = -1;
+			int npvin = -1;
+			for(PVI = PupInfo->begin(); PVI != PupInfo->end(); ++PVI) {
+
+				int BX = PVI->getBunchCrossing();
+
+				if(BX == 0) {
+					npvin = PVI->getPU_NumInteractions(); // in time only
+					npv = PVI->getTrueNumInteractions(); // in and out of time
+					continue;
+				}
+			}
+			event_.nPU = npv;
+			event_.nPUin = npvin;
+		}
 
         fillTriggers(iEvent);
         if(putMuons) fillMuons(iEvent);
